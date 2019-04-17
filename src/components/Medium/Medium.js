@@ -1,25 +1,42 @@
-import React, { Component } from 'react';
-import Card from './../shared/Card/Card';
-import Loading from './../shared/Loading/Loading';
+import React, { Component } from "react";
+import Card from "./../shared/Card/Card";
+import Loading from "./../shared/Loading/Loading";
+import { connect } from "react-redux";
+import { requestArticles } from "./../../ducks/mediumReducer";
 
 class Medium extends Component {
   constructor(props) {
     super(props);
-    this.state = { articles: [], loading: true }
+    this.state = {};
+  }
+  componentDidMount(){
+    this.props.requestArticles()
   }
   render() {
-    const articles = this.state.articles.map((article => <Card key={article.id} article={article} />))
+    console.log(this.props.articles)
+    const articles = this.props.articles.map(article => (
+      <Card key={article.id} article={article} />
+    ));
     return (
-      <div className='news-container'>
+      <div className="news-container">
         <img src="./mediumLogo.png" style={styles.logo} alt="" />
-        {this.state.loading ? <Loading /> : <div>{articles}</div>}
+        {this.props.loading ? <Loading /> : <div>{articles}</div>}
       </div>
-    )
+    );
   }
 }
+function mapStateToProps(state) {
+  return state.medium;
+}
+const mapDispatchToProps = {
+  requestArticles
+};
 
-export default Medium;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Medium);
 
 const styles = {
-  logo: { width: '250px' }
-}
+  logo: { width: "250px" }
+};
